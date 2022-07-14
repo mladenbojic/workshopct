@@ -1,0 +1,84 @@
+{
+	"name": "df_working",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "SourceDataset_06m",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "Parquet1",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "flatten1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          actors as (name as string)[],",
+				"          availabilityDate as string,",
+				"          genre as string,",
+				"          rating as string,",
+				"          releaseYear as integer,",
+				"          runtime as integer,",
+				"          streamingAvailabilityDate as string,",
+				"          tier as integer,",
+				"          title as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'document') ~> source1",
+				"source1 foldDown(unroll(actors),",
+				"     mapColumn(",
+				"          actors,",
+				"          availabilityDate,",
+				"          genre,",
+				"          rating,",
+				"          releaseYear,",
+				"          runtime,",
+				"          streamingAvailabilityDate,",
+				"          tier,",
+				"          title",
+				"     ),",
+				"     skipDuplicateMapInputs: false,",
+				"     skipDuplicateMapOutputs: false) ~> flatten1",
+				"flatten1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          name as string,",
+				"          availabilityDate as string,",
+				"          genre as string,",
+				"          rating as string,",
+				"          releaseYear as long,",
+				"          runtime as long,",
+				"          streamingAvailabilityDate as string,",
+				"          tier as long,",
+				"          title as string,",
+				"          id as string,",
+				"          {_rid} as string,",
+				"          {_self} as string,",
+				"          {_etag} as string,",
+				"          {_attachments} as string,",
+				"          {_ts} as long",
+				"     ),",
+				"     format: 'parquet',",
+				"     truncate: true,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink1"
+			]
+		}
+	}
+}

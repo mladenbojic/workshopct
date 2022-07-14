@@ -1,0 +1,22 @@
+{
+	"name": "DestinationDataset_06m",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "wstest20220713-WorkspaceDefaultStorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "movies",
+				"folderPath": "movies",
+				"fileSystem": "bronze"
+			},
+			"compressionCodec": "gzip"
+		},
+		"schema": []
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
+}
